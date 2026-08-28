@@ -3,86 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSwap Core - Powered by ZED Ecosystem</title>
+    <title>GSwap - ZED Ecosystem Dynamic Engine</title>
     <style>
         :root {
-            --bg-dark: #040914;
-            --card-bg: rgba(10, 25, 47, 0.85);
-            --accent-cyan: #00f2fe;
-            --accent-blue: #0066ff;
-            --text-main: #ffffff;
-            --text-sub: #8892b0;
-            --border-glow: rgba(0, 242, 254, 0.3);
+            --bg-body: #f4f7f9;
+            --card-white: #ffffff;
+            --ocean-blue: #004d80;
+            --ocean-dark: #07172b;
+            --accent-cyan: #00c2ff;
+            --text-dark: #1e293b;
+            --text-sub: #64748b;
+            --btn-blue: #007bc7;
+            --border-light: #e2e8f0;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
+        }
+
+        .phone-frame {
+            width: 100%;
+            max-width: 414px;
+            height: 100vh;
+            max-height: 896px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* Top Status & Header */
+        .status-bar {
+            padding: 14px 24px 8px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .app-header {
+            padding: 10px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .bell-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: justify-content;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 24px 90px;
+        }
+
+        /* Banner Card */
+        .banner-card {
+            background: linear-gradient(135deg, #072a4a 0%, #0d568c 50%, #1582c4 100%);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 123, 199, 0.25);
+            margin-bottom: 24px;
+        }
+
+        .banner-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+        .banner-card p { font-size: 0.8rem; opacity: 0.85; line-height: 1.3; max-width: 80%; margin-bottom: 16px; }
+
+        .learn-btn {
+            background: var(--btn-blue);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .section-header h3 { font-size: 1.15rem; font-weight: 700; }
+        .see-all { color: var(--btn-blue); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+
+        /* Dynamic Carousel - Popular Assets */
+        .asset-carousel {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        .asset-carousel::-webkit-scrollbar { display: none; }
+
+        .asset-card {
+            min-width: 140px;
+            background: var(--card-white);
+            border: 1px solid var(--border-light);
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .asset-top { display: flex; align-items: center; gap: 8px; }
+        .asset-icon { width: 28px; height: 28px; border-radius: 50%; }
+        .asset-symbol { font-weight: 700; font-size: 0.95rem; }
+        .asset-name { font-size: 0.75rem; color: var(--text-sub); }
+        .sparkline { height: 24px; width: 100%; }
+        .asset-price-label { font-size: 0.65rem; color: var(--text-sub); }
+        .asset-price { font-size: 0.95rem; font-weight: 700; }
+
+        .trade-btn {
+            width: 100%;
+            background: var(--btn-blue);
+            color: white;
+            border: none;
+            padding: 8px 0;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        /* Dynamic Asset List */
+        .asset-list {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .asset-list::-webkit-scrollbar { display: none; }
+
+        .asset-chip {
+            background: var(--card-white);
+            border: 1px solid var(--border-light);
+            border-radius: 25px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--ocean-dark);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 14px 10px 24px;
+        }
+
+        .nav-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-image: radial-gradient(circle at 50% 30%, #0a2540 0%, #040914 70%);
+            gap: 4px;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            text-decoration: none;
+            cursor: pointer;
         }
-        .app-container {
-            position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px;
-            display: flex; flex-direction: column; gap: 20px;
-        }
-        header { display: flex; justify-content: space-between; align-items: center; }
-        .brand-logo { display: flex; align-items: center; gap: 12px; }
-        .brand-logo img.zed-shield { height: 42px; border-radius: 8px; box-shadow: 0 0 12px var(--accent-cyan); }
-        .network-tag {
-            font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0, 242, 254, 0.1);
-            border: 1px solid var(--accent-cyan); padding: 4px 10px; border-radius: 12px; font-weight: bold;
-        }
-        .swap-card {
-            background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 20px; padding: 24px;
-        }
-        .input-box {
-            background: rgba(4, 9, 20, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px; padding: 14px; margin-bottom: 12px;
-        }
-        .input-row { display: flex; justify-content: space-between; align-items: center; }
-        .input-row input { background: transparent; border: none; color: #fff; font-size: 1.4rem; font-weight: bold; outline: none; width: 60%; }
-        .currency-select { display: flex; align-items: center; gap: 8px; background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); padding: 6px 12px; border-radius: 20px; font-weight: bold; }
-        .currency-select img { width: 22px; height: 22px; border-radius: 50%; }
-        .action-btn {
-            width: 100%; padding: 16px; border: none; border-radius: 14px;
-            background: linear-gradient(90deg, #0066ff, #00f2fe); color: #fff; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px;
-        }
-        .stealth-box {
-            background: rgba(0, 242, 254, 0.05); border: 1px dashed var(--accent-cyan); border-radius: 14px; padding: 14px; margin-top: 15px; font-size: 0.8rem;
-        }
+
+        .nav-item.active { color: var(--accent-cyan); }
+        .nav-icon { width: 20px; height: 20px; stroke-width: 2; stroke: currentColor; fill: none; }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <div class="brand-logo">
-                <img src="./assets/1787529675117.png" alt="ZED Ecosystem Shield Logo" class="zed-shield">
-            </div>
-            <span class="network-tag">HD-NETWORK ACTIVE</span>
-        </header>
-        <div class="swap-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                <h3>GSwap Exchange</h3>
-                <img src="./assets/image_f174f3d1.png" alt="ZED Symbol Logo" style="height: 32px; border-radius:6px;">
-            </div>
-            <div class="input-box">
-                <div class="input-row">
-                    <input type="number" id="swap-input" value="100.00">
-                    <div class="currency-select">
-                        <img src="./assets/image_f174f3d1.png" alt="ZED Icon">
-                        <span>ZED</span>
-                    </div>
-                </div>
-            </div>
-            <button class="action-btn" onclick="alert('Swap Executed via gswap-core!')">Execute GSwap</button>
-            <div class="stealth-box">
-                <div style="color:var(--accent-cyan); font-weight:bold;">SENDER INVISIBILITY ACTIVE</div>
-                <div style="font-family:monospace; color:var(--text-sub); margin-top:4px;">0xzed_stealth_18cfd228c7ffdc6c00000001</div>
-            </div>
+
+<div class="phone-frame">
+    <div class="status-bar">
+        <span>9:41</span>
+        <span>5G</span>
+    </div>
+
+    <div class="app-header">
+        <div class="brand-title">GSwap</div>
+        <div class="bell-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
         </div>
     </div>
+
+    <div class="scrollable-content">
+        <div class="banner-card">
+            <h2>Global Markets</h2>
+            <p>GlobalSwap Liquidity engine routing deep ocean tones.</p>
+            <button class="learn-btn" onclick="alert('Routing through ZED Ecosystem Core')">Learn More</button>
+        </div>
+
+        <div class="section-header">
+            <h3>Popular Assets</h3>
+            <a href="#" class="see-all">See All</a>
+        </div>
+
+        <!-- Dynamic Container for Active Pairs -->
+        <div class="asset-carousel" id="dynamic-carousel"></div>
+
+        <div class="section-header">
+            <h3>Asset Assets</h3>
+            <a href="#" class="see-all">See All</a>
+        </div>
+
+        <!-- Dynamic Container for Asset List -->
+        <div class="asset-list" id="dynamic-asset-list"></div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Home</div>
+        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Analytics</div>
+        <div class="nav-item active"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Trade</div>
+        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>Markets</div>
+        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Profile</div>
+    </div>
+</div>
+
+<script>
+    // Dynamic Pair Loader Engine (Simulating gswap-core state endpoint)
+    const dynamicPairs = [
+        { symbol: 'ETH', name: 'ETH', price: '$3,120.02', icon: './assets/image_f174f3d1.png' },
+        { symbol: 'BTC', name: 'BTC', price: '$94,380.00', icon: './assets/image_f174f3d1.png' },
+        { symbol: 'ZED', name: 'ZED', price: '$5.50', icon: './assets/image_f174f3d1.png' }
+    ];
+
+    function renderDynamicPairs() {
+        const carousel = document.getElementById('dynamic-carousel');
+        const list = document.getElementById('dynamic-asset-list');
+
+        carousel.innerHTML = '';
+        list.innerHTML = '';
+
+        dynamicPairs.forEach(asset => {
+            carousel.innerHTML += `
+                <div class="asset-card">
+                    <div class="asset-top">
+                        <img src="${asset.icon}" class="asset-icon" alt="${asset.symbol}" onerror="this.src='https://via.placeholder.com/28'">
+                        <div>
+                            <div class="asset-symbol">${asset.symbol}</div>
+                            <div class="asset-name">${asset.name}</div>
+                        </div>
+                    </div>
+                    <svg class="sparkline" viewBox="0 0 100 30"><path d="M0,20 Q25,5 50,18 T100,8" fill="none" stroke="#007bc7" stroke-width="2"/></svg>
+                    <div class="asset-price-label">Live Price</div>
+                    <div class="asset-price">${asset.price}</div>
+                    <button class="trade-btn">Trade</button>
+                </div>
+            `;
+
+            list.innerHTML += `
+                <div class="asset-chip">
+                    <img src="${asset.icon}" style="width:20px; height:20px; border-radius:50%;" onerror="this.src='https://via.placeholder.com/20'">
+                    ${asset.symbol}
+                </div>
+            `;
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', renderDynamicPairs);
+</script>
+
 </body>
 </html>
