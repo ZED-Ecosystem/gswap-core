@@ -1,5 +1,4 @@
 use std::time::{SystemTime, UNIX_EPOCH};
-use std::collections::HashMap;
 use serde::Deserialize;
 
 // ==========================================
@@ -41,7 +40,7 @@ impl StealthReceiveWallet {
 }
 
 // ==========================================
-// 3. UNIVERSAL LIVE HTTP PRICE ORACLE ENGINE (PURE RUST TLS)
+// 3. UNIVERSAL LIVE HTTP PRICE ORACLE ENGINE
 // ==========================================
 #[derive(Deserialize, Debug)]
 struct CoinGeckoResponse {
@@ -61,7 +60,7 @@ impl UniversalPriceOracle {
         Self
     }
 
-    /// Fetches REAL-TIME live market prices directly over HTTP APIs via pure Rust TLS
+    /// Fetches REAL-TIME live market prices directly over HTTP APIs
     pub fn fetch_live_price(&self, pair: &str) -> Result<f64, String> {
         let client = reqwest::blocking::Client::builder()
             .use_rustls_tls()
@@ -123,9 +122,9 @@ impl LiquidityPool {
         let _live_pair_price = oracle.fetch_live_price(&self.pair)?;
 
         let total_fee = amount_zed_in * 0.0010; // 0.10% Total Fee
-        let lp_fee = total_fee * 0.50;          // 0.05% LP Provider Fee
-        let pol_fee = total_fee * 0.30;         // 0.03% POL Reserve Vault Fee
-        let burn_fee = total_fee * 0.20;        // 0.02% Deflationary Burn Fee
+        let lp_fee = total_fee * 0.50;          // 0.05% LP Fee
+        let pol_fee = total_fee * 0.30;         // 0.03% POL Fee
+        let burn_fee = total_fee * 0.20;        // 0.02% Burn Fee
 
         let net_in = amount_zed_in - total_fee;
         let target_out = (net_in * self.reserve_target) / (self.reserve_zed + net_in);
