@@ -24,27 +24,16 @@
             align-items: center;
             background-image: radial-gradient(circle at 50% 30%, #0a2540 0%, #040914 70%);
         }
-        .map-background {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: url('./assets/1000014983.png') center/cover no-repeat;
-            opacity: 0.18; z-index: 0; pointer-events: none;
-        }
         .app-container {
             position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px;
             display: flex; flex-direction: column; gap: 20px;
         }
         header { display: flex; justify-content: space-between; align-items: center; }
         .brand-logo { display: flex; align-items: center; gap: 12px; }
-        .brand-logo img.gswap-icon { height: 42px; border-radius: 50%; box-shadow: 0 0 12px var(--accent-cyan); }
-        .brand-logo img.zed-shield { height: 38px; }
+        .brand-logo img.zed-shield { height: 42px; border-radius: 8px; box-shadow: 0 0 12px var(--accent-cyan); }
         .network-tag {
             font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0, 242, 254, 0.1);
             border: 1px solid var(--accent-cyan); padding: 4px 10px; border-radius: 12px; font-weight: bold;
-        }
-        .market-banner {
-            background: linear-gradient(135deg, rgba(0, 102, 255, 0.4), rgba(0, 242, 254, 0.2)), url('./assets/1000014983.png') center/cover;
-            border: 1px solid var(--border-glow); border-radius: 16px; padding: 20px;
         }
         .swap-card {
             background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 20px; padding: 24px;
@@ -55,8 +44,8 @@
         }
         .input-row { display: flex; justify-content: space-between; align-items: center; }
         .input-row input { background: transparent; border: none; color: #fff; font-size: 1.4rem; font-weight: bold; outline: none; width: 60%; }
-        .currency-select { display: flex; align-items: center; gap: 6px; background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); padding: 6px 12px; border-radius: 20px; font-weight: bold; }
-        .currency-select img { width: 20px; height: 20px; }
+        .currency-select { display: flex; align-items: center; gap: 8px; background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+        .currency-select img { width: 22px; height: 22px; border-radius: 50%; }
         .action-btn {
             width: 100%; padding: 16px; border: none; border-radius: 14px;
             background: linear-gradient(90deg, #0066ff, #00f2fe); color: #fff; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px;
@@ -67,29 +56,23 @@
     </style>
 </head>
 <body>
-    <div class="map-background"></div>
     <div class="app-container">
         <header>
             <div class="brand-logo">
-                <img src="./assets/1000007815.png" alt="GSwap Logo" class="gswap-icon">
-                <img src="./assets/1000007804.png" alt="ZED Shield" class="zed-shield">
+                <img src="./assets/1787529675117.png" alt="ZED Ecosystem Shield Logo" class="zed-shield">
             </div>
             <span class="network-tag">HD-NETWORK ACTIVE</span>
         </header>
-        <div class="market-banner">
-            <h2>Global Liquidity Map</h2>
-            <p>Post-Quantum HD-Vector Routing ($D=10,000$)</p>
-        </div>
         <div class="swap-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <h3>GSwap Exchange</h3>
-                <img src="./assets/1000007799.png" alt="ZED Symbol Logo" style="height: 28px;">
+                <img src="./assets/image_f174f3d1.png" alt="ZED Symbol Logo" style="height: 32px; border-radius:6px;">
             </div>
             <div class="input-box">
                 <div class="input-row">
                     <input type="number" id="swap-input" value="100.00">
                     <div class="currency-select">
-                        <img src="./assets/1000007799.png" alt="ZED Logo">
+                        <img src="./assets/image_f174f3d1.png" alt="ZED Icon">
                         <span>ZED</span>
                     </div>
                 </div>
