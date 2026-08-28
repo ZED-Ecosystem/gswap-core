@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSwap - ZED Ecosystem Dynamic Engine</title>
+    <title>GSwap DEX - ZED Ecosystem Engine</title>
     <style>
         :root {
-            --bg-body: #f4f7f9;
-            --card-white: #ffffff;
-            --ocean-blue: #004d80;
-            --ocean-dark: #07172b;
+            --bg-body: #07172b;
+            --card-dark: #0f243e;
+            --card-light: #183354;
             --accent-cyan: #00c2ff;
-            --text-dark: #1e293b;
-            --text-sub: #64748b;
+            --text-white: #ffffff;
+            --text-sub: #94a3b8;
             --btn-blue: #007bc7;
-            --border-light: #e2e8f0;
+            --btn-green: #10b981;
+            --border-dark: #1e3a5f;
+            --danger-red: #ef4444;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
         body {
-            background-color: var(--bg-body);
-            color: var(--text-dark);
+            background-color: #030b15;
+            color: var(--text-white);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -33,173 +34,227 @@
             max-width: 414px;
             height: 100vh;
             max-height: 896px;
-            background: #ffffff;
+            background: var(--bg-body);
             display: flex;
             flex-direction: column;
             position: relative;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             overflow: hidden;
+            border: 1px solid var(--border-dark);
         }
 
-        /* Top Status & Header */
+        /* Header */
         .status-bar {
-            padding: 14px 24px 8px;
+            padding: 12px 20px 4px;
             display: flex;
             justify-content: space-between;
-            font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            color: var(--text-sub);
         }
 
         .app-header {
-            padding: 10px 24px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .brand-logo-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-bottom: 1px solid var(--border-dark);
         }
 
         .gswap-app-logo {
-            height: 40px;
+            height: 38px;
             width: auto;
-            border-radius: 8px;
+            border-radius: 6px;
             object-fit: contain;
         }
 
-        .bell-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #f1f5f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .wallet-pill {
+            background: rgba(0, 194, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
             cursor: pointer;
+        }
+
+        /* Tabs */
+        .dex-tabs {
+            display: flex;
+            background: var(--card-dark);
+            margin: 12px 20px 0;
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border-dark);
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-sub);
+            padding: 8px 0;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--btn-blue);
+            color: var(--text-white);
         }
 
         .scrollable-content {
             flex: 1;
             overflow-y: auto;
-            padding: 10px 24px 90px;
+            padding: 16px 20px 90px;
         }
 
-        /* Banner Card */
-        .banner-card {
-            background: linear-gradient(135deg, #072a4a 0%, #0d568c 50%, #1582c4 100%);
-            border-radius: 20px;
-            padding: 24px;
-            color: white;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0, 123, 199, 0.25);
-            margin-bottom: 24px;
+        /* DEX Modules */
+        .dex-card {
+            background: var(--card-dark);
+            border-radius: 18px;
+            padding: 16px;
+            border: 1px solid var(--border-dark);
+            margin-bottom: 16px;
         }
 
-        .banner-card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
-        .banner-card p { font-size: 0.8rem; opacity: 0.85; line-height: 1.3; max-width: 80%; margin-bottom: 16px; }
-
-        .learn-btn {
-            background: var(--btn-blue);
-            color: white;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-
-        /* Section Headers */
-        .section-header {
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
-        .section-header h3 { font-size: 1.15rem; font-weight: 700; }
-        .see-all { color: var(--btn-blue); font-size: 0.85rem; font-weight: 600; text-decoration: none; }
+        .card-title { font-size: 1rem; font-weight: 700; color: var(--text-white); }
+        .settings-btn { color: var(--text-sub); cursor: pointer; font-size: 0.85rem; }
 
-        /* Dynamic Carousel */
-        .asset-carousel {
+        .swap-box {
+            background: var(--card-light);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-dark);
+        }
+
+        .swap-box-header {
             display: flex;
-            gap: 14px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            scrollbar-width: none;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-sub);
+            margin-bottom: 6px;
         }
-        .asset-carousel::-webkit-scrollbar { display: none; }
 
-        .asset-card {
-            min-width: 140px;
-            background: var(--card-white);
-            border: 1px solid var(--border-light);
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        .swap-input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swap-input {
+            background: none;
+            border: none;
+            color: var(--text-white);
+            font-size: 1.4rem;
+            font-weight: 700;
+            width: 50%;
+            outline: none;
+        }
+
+        .token-select {
+            background: var(--card-dark);
+            border: 1px solid var(--border-dark);
+            color: var(--text-white);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .swap-divider {
+            display: flex;
+            justify-content: center;
+            margin: -12px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .swap-icon-btn {
+            background: var(--btn-blue);
+            border: 3px solid var(--card-dark);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .route-info {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.75rem;
+            color: var(--text-sub);
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
+            margin-top: 12px;
         }
 
-        .asset-top { display: flex; align-items: center; gap: 8px; }
-        .asset-icon { width: 28px; height: 28px; border-radius: 50%; }
-        .asset-symbol { font-weight: 700; font-size: 0.95rem; }
-        .asset-name { font-size: 0.75rem; color: var(--text-sub); }
-        .sparkline { height: 24px; width: 100%; }
-        .asset-price-label { font-size: 0.65rem; color: var(--text-sub); }
-        .asset-price { font-size: 0.95rem; font-weight: 700; }
+        .route-row { display: flex; justify-content: space-between; }
+        .route-value { color: var(--text-white); font-weight: 600; }
 
-        .trade-btn {
+        .action-btn {
             width: 100%;
             background: var(--btn-blue);
             color: white;
             border: none;
-            padding: 8px 0;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.8rem;
+            padding: 14px 0;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
-            margin-top: 4px;
+            margin-top: 12px;
+            box-shadow: 0 4px 12px rgba(0, 123, 199, 0.4);
         }
 
-        /* Dynamic Asset List */
-        .asset-list {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .asset-list::-webkit-scrollbar { display: none; }
+        .action-btn.green { background: var(--btn-green); }
 
-        .asset-chip {
-            background: var(--card-white);
-            border: 1px solid var(--border-light);
-            border-radius: 25px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            white-space: nowrap;
+        /* Stealth Section */
+        .stealth-box {
+            background: rgba(0, 195, 255, 0.05);
+            border: 1px dashed var(--accent-cyan);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.8rem;
+            margin-top: 10px;
         }
 
-        /* Bottom Navigation Bar */
+        .stealth-title { color: var(--accent-cyan); font-weight: 700; margin-bottom: 4px; }
+        .stealth-address { font-family: monospace; font-size: 0.7rem; color: var(--text-sub); word-break: break-all; }
+
+        /* Navigation */
         .bottom-nav {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: var(--ocean-dark);
+            background: #030b15;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 14px 10px 24px;
+            padding: 12px 10px 20px;
+            border-top: 1px solid var(--border-dark);
         }
 
         .nav-item {
@@ -207,7 +262,7 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            color: #94a3b8;
+            color: var(--text-sub);
             font-size: 0.7rem;
             text-decoration: none;
             cursor: pointer;
@@ -215,98 +270,251 @@
 
         .nav-item.active { color: var(--accent-cyan); }
         .nav-icon { width: 20px; height: 20px; stroke-width: 2; stroke: currentColor; fill: none; }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <div class="phone-frame">
     <div class="status-bar">
-        <span>9:41</span>
-        <span>5G</span>
+        <span>ZED Node Active</span>
+        <span>Hyperdimensional Routing</span>
     </div>
 
-    <!-- Header linked to assets/GSwap Logo.png -->
     <div class="app-header">
-        <div class="brand-logo-container">
-            <img src="./assets/GSwap Logo.png" alt="GSwap Logo" class="gswap-app-logo">
-        </div>
-        <div class="bell-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-        </div>
+        <img src="./assets/GSwap Logo.png" alt="GSwap Logo" class="gswap-app-logo" onerror="this.src='./assets/image_f174f3d1.png'">
+        <button class="wallet-pill" id="wallet-btn" onclick="toggleWallet()">Connect Wallet</button>
+    </div>
+
+    <!-- Dex Mode Selection -->
+    <div class="dex-tabs">
+        <button class="tab-btn active" onclick="switchTab('swap')">Swap</button>
+        <button class="tab-btn" onclick="switchTab('pool')">Pool / AMM</button>
+        <button class="tab-btn" onclick="switchTab('privacy')">Stealth Receive</button>
     </div>
 
     <div class="scrollable-content">
-        <div class="banner-card">
-            <h2>Global Markets</h2>
-            <p>GlobalSwap Liquidity engine routing deep ocean tones.</p>
-            <button class="learn-btn" onclick="alert('Routing through ZED Ecosystem Core')">Learn More</button>
+
+        <!-- 1. SWAP MODULE -->
+        <div id="swap-module" class="dex-card">
+            <div class="card-header">
+                <span class="card-title">Instant Swap</span>
+                <span class="settings-btn" onclick="cycleSlippage()">Slippage: <b id="slippage-val" style="color:var(--accent-cyan)">0.5%</b></span>
+            </div>
+
+            <!-- Pay Token -->
+            <div class="swap-box">
+                <div class="swap-box-header">
+                    <span>You Pay</span>
+                    <span>Balance: <span id="pay-bal">10.00</span></span>
+                </div>
+                <div class="swap-input-row">
+                    <input type="number" class="swap-input" id="pay-amount" value="1.0" oninput="calculateOutput()">
+                    <select class="token-select" id="pay-token" onchange="calculateOutput()">
+                        <option value="ZED">ZED</option>
+                        <option value="ETH">ETH</option>
+                        <option value="BTC">BTC</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="swap-divider">
+                <button class="swap-icon-btn" onclick="switchTokens()">↓</button>
+            </div>
+
+            <!-- Receive Token -->
+            <div class="swap-box" style="margin-top: 4px;">
+                <div class="swap-box-header">
+                    <span>You Receive (Estimated)</span>
+                    <span>Balance: <span id="receive-bal">0.00</span></span>
+                </div>
+                <div class="swap-input-row">
+                    <input type="number" class="swap-input" id="receive-amount" value="0.00" readonly>
+                    <select class="token-select" id="receive-token" onchange="calculateOutput()">
+                        <option value="ETH">ETH</option>
+                        <option value="ZED">ZED</option>
+                        <option value="BTC">BTC</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Real-time Engine Routing Details -->
+            <div class="route-info">
+                <div class="route-row">
+                    <span>Routing Engine</span>
+                    <span class="route-value" style="color:var(--accent-cyan)">Hyperdimensional Vector Engine</span>
+                </div>
+                <div class="route-row">
+                    <span>Price Impact</span>
+                    <span class="route-value">&lt; 0.01%</span>
+                </div>
+                <div class="route-row">
+                    <span>Minimum Received</span>
+                    <span class="route-value" id="min-received">0.00 ETH</span>
+                </div>
+            </div>
+
+            <button class="action-btn" onclick="executeSwap()">Execute Swap</button>
         </div>
 
-        <div class="section-header">
-            <h3>Popular Assets</h3>
-            <a href="#" class="see-all">See All</a>
+        <!-- 2. POOL / AMM MODULE -->
+        <div id="pool-module" class="dex-card hidden">
+            <div class="card-header">
+                <span class="card-title">Liquidity Pools</span>
+                <span class="settings-btn" style="color:var(--btn-green)">+ Add Liquidity</span>
+            </div>
+
+            <div class="swap-box">
+                <div class="swap-box-header"><span>Deposit Token A</span></div>
+                <div class="swap-input-row">
+                    <input type="number" class="swap-input" value="100.0">
+                    <select class="token-select"><option>ZED</option></select>
+                </div>
+            </div>
+
+            <div class="swap-box">
+                <div class="swap-box-header"><span>Deposit Token B</span></div>
+                <div class="swap-input-row">
+                    <input type="number" class="swap-input" value="0.17">
+                    <select class="token-select"><option>ETH</option></select>
+                </div>
+            </div>
+
+            <div class="route-info">
+                <div class="route-row">
+                    <span>Pool Share</span>
+                    <span class="route-value">0.04%</span>
+                </div>
+                <div class="route-row">
+                    <span>Est. Annual Yield (APY)</span>
+                    <span class="route-value" style="color:var(--btn-green)">18.4%</span>
+                </div>
+            </div>
+
+            <button class="action-btn green" onclick="alert('Liquidity successfully provided to gswap-core AMM engine!')">Supply Liquidity</button>
         </div>
 
-        <div class="asset-carousel" id="dynamic-carousel"></div>
+        <!-- 3. PRIVACY / STEALTH RECEIVE MODULE -->
+        <div id="privacy-module" class="dex-card hidden">
+            <div class="card-header">
+                <span class="card-title">Stealth Receive Address</span>
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-sub); margin-bottom:12px;">Generate single-use untraceable receive keys powered by ZED Post-Quantum mechanics.</p>
 
-        <div class="section-header">
-            <h3>Asset Assets</h3>
-            <a href="#" class="see-all">See All</a>
+            <button class="action-btn" style="background:var(--card-light); border:1px solid var(--accent-cyan);" onclick="generateStealthAddress()">Generate One-Time Stealth Key</button>
+
+            <div class="stealth-box hidden" id="stealth-result">
+                <div class="stealth-title">Active Stealth Receive Vector:</div>
+                <div class="stealth-address" id="stealth-addr-display">0x0000000000000000000000000000000000000000</div>
+            </div>
         </div>
 
-        <div class="asset-list" id="dynamic-asset-list"></div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>Home</div>
-        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>Analytics</div>
-        <div class="nav-item active"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Trade</div>
-        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>Markets</div>
-        <div class="nav-item"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Profile</div>
+        <div class="nav-item active"><svg class="nav-icon" viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>Swap</div>
+        <div class="nav-item" onclick="switchTab('pool')"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>Pools</div>
+        <div class="nav-item" onclick="switchTab('privacy')"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Privacy</div>
     </div>
 </div>
 
 <script>
-    const dynamicPairs = [
-        { symbol: 'ETH', name: 'ETH', price: '$3,120.02', icon: './assets/GSwap Logo.png' },
-        { symbol: 'BTC', name: 'BTC', price: '$94,380.00', icon: './assets/GSwap Logo.png' },
-        { symbol: 'ZED', name: 'ZED', price: '$5.50', icon: './assets/GSwap Logo.png' }
-    ];
+    // Universal Price Engine Mapping (Relative to USD)
+    const rates = { ZED: 5.50, ETH: 3120.02, BTC: 94380.00 };
+    let slippage = 0.5;
+    let walletConnected = false;
 
-    function renderDynamicPairs() {
-        const carousel = document.getElementById('dynamic-carousel');
-        const list = document.getElementById('dynamic-asset-list');
-
-        carousel.innerHTML = '';
-        list.innerHTML = '';
-
-        dynamicPairs.forEach(asset => {
-            carousel.innerHTML += `
-                <div class="asset-card">
-                    <div class="asset-top">
-                        <img src="${asset.icon}" class="asset-icon" alt="${asset.symbol}">
-                        <div>
-                            <div class="asset-symbol">${asset.symbol}</div>
-                            <div class="asset-name">${asset.name}</div>
-                        </div>
-                    </div>
-                    <svg class="sparkline" viewBox="0 0 100 30"><path d="M0,20 Q25,5 50,18 T100,8" fill="none" stroke="#007bc7" stroke-width="2"/></svg>
-                    <div class="asset-price-label">Live Price</div>
-                    <div class="asset-price">${asset.price}</div>
-                    <button class="trade-btn">Trade</button>
-                </div>
-            `;
-
-            list.innerHTML += `
-                <div class="asset-chip">
-                    <img src="${asset.icon}" style="width:20px; height:20px; border-radius:50%;">
-                    ${asset.symbol}
-                </div>
-            `;
-        });
+    function toggleWallet() {
+        walletConnected = !walletConnected;
+        const btn = document.getElementById('wallet-btn');
+        if (walletConnected) {
+            btn.innerText = '0x8A2...E91';
+            btn.style.background = 'rgba(16, 185, 129, 0.2)';
+            btn.style.borderColor = '#10b981';
+            btn.style.color = '#10b981';
+        } else {
+            btn.innerText = 'Connect Wallet';
+            btn.style.background = 'rgba(0, 194, 255, 0.1)';
+            btn.style.borderColor = '#00c2ff';
+            btn.style.color = '#00c2ff';
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', renderDynamicPairs);
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('swap-module').classList.add('hidden');
+        document.getElementById('pool-module').classList.add('hidden');
+        document.getElementById('privacy-module').classList.add('hidden');
+
+        if (tab === 'swap') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('swap-module').classList.remove('hidden');
+        } else if (tab === 'pool') {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('pool-module').classList.remove('hidden');
+        } else if (tab === 'privacy') {
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            document.getElementById('privacy-module').classList.remove('hidden');
+        }
+    }
+
+    function calculateOutput() {
+        const payToken = document.getElementById('pay-token').value;
+        const receiveToken = document.getElementById('receive-token').value;
+        const payAmount = parseFloat(document.getElementById('pay-amount').value) || 0;
+
+        if (payToken === receiveToken) {
+            document.getElementById('receive-amount').value = payAmount.toFixed(4);
+            document.getElementById('min-received').innerText = `${payAmount.toFixed(4)} ${receiveToken}`;
+            return;
+        }
+
+        const usdVal = payAmount * rates[payToken];
+        const receiveVal = usdVal / rates[receiveToken];
+        const minReceive = receiveVal * (1 - (slippage / 100));
+
+        document.getElementById('receive-amount').value = receiveVal.toFixed(6);
+        document.getElementById('min-received').innerText = `${minReceive.toFixed(6)} ${receiveToken}`;
+    }
+
+    function switchTokens() {
+        const paySelect = document.getElementById('pay-token');
+        const receiveSelect = document.getElementById('receive-token');
+        const temp = paySelect.value;
+        paySelect.value = receiveSelect.value;
+        receiveSelect.value = temp;
+        calculateOutput();
+    }
+
+    function cycleSlippage() {
+        if (slippage === 0.5) slippage = 1.0;
+        else if (slippage === 1.0) slippage = 0.1;
+        else slippage = 0.5;
+        document.getElementById('slippage-val').innerText = `${slippage}%`;
+        calculateOutput();
+    }
+
+    function executeSwap() {
+        if (!walletConnected) {
+            alert('Please connect your ZED Ecosystem wallet first!');
+            return;
+        }
+        const payAmt = document.getElementById('pay-amount').value;
+        const payTkn = document.getElementById('pay-token').value;
+        const recAmt = document.getElementById('receive-amount').value;
+        const recTkn = document.getElementById('receive-token').value;
+
+        alert(`Swap Executed via gswap-core:\nSwapped ${payAmt} ${payTkn} for ${recAmt} ${recTkn}`);
+    }
+
+    function generateStealthAddress() {
+        const randHex = '0x' + Array.from({length: 40}, () => Math.floor(Math.random()*16).toString(16)).join('');
+        document.getElementById('stealth-addr-display').innerText = randHex;
+        document.getElementById('stealth-result').classList.remove('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', calculateOutput);
 </script>
 
 </body>
