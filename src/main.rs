@@ -41,13 +41,12 @@ impl StealthReceiveWallet {
 }
 
 // ==========================================
-// 3. UNIVERSAL LIVE HTTP PRICE ORACLE ENGINE
+// 3. UNIVERSAL LIVE HTTP PRICE ORACLE ENGINE (PURE RUST TLS)
 // ==========================================
 #[derive(Deserialize, Debug)]
 struct CoinGeckoResponse {
     bitcoin: Option<CurrencyPrice>,
     ethereum: Option<CurrencyPrice>,
-    tether: Option<CurrencyPrice>,
 }
 
 #[derive(Deserialize, Debug)]
@@ -62,9 +61,12 @@ impl UniversalPriceOracle {
         Self
     }
 
-    /// Fetches REAL-TIME live market prices directly over HTTP APIs
+    /// Fetches REAL-TIME live market prices directly over HTTP APIs via pure Rust TLS
     pub fn fetch_live_price(&self, pair: &str) -> Result<f64, String> {
-        let client = reqwest::blocking::Client::new();
+        let client = reqwest::blocking::Client::builder()
+            .use_rustls_tls()
+            .build()
+            .map_err(|e| format!("Client creation error: {}", e))?;
         
         match pair {
             "ZED/BTC" => {
@@ -90,7 +92,7 @@ impl UniversalPriceOracle {
                 res.ethereum.map(|e| e.usd).ok_or_else(|| "ETH Price Data Missing".to_string())
             },
             "ZED/USDT" | "ZED/USD" => Ok(1.00),
-            "ZED" => Ok(5.50), // Native ecosystem dynamic peg base
+            "ZED" => Ok(5.50),
             _ => Err(format!("Live feed route for {} dynamic lookup pending", pair)),
         }
     }
@@ -121,9 +123,9 @@ impl LiquidityPool {
         let _live_pair_price = oracle.fetch_live_price(&self.pair)?;
 
         let total_fee = amount_zed_in * 0.0010; // 0.10% Total Fee
-        let lp_fee = total_fee * 0.50;          // 0.05% LP Fee
-        let pol_fee = total_fee * 0.30;         // 0.03% POL Fee
-        let burn_fee = total_fee * 0.20;        // 0.02% Burn Fee
+        let lp_fee = total_fee * 0.50;          // 0.05% LP Provider Fee
+        let pol_fee = total_fee * 0.30;         // 0.03% POL Reserve Vault Fee
+        let burn_fee = total_fee * 0.20;        // 0.02% Deflationary Burn Fee
 
         let net_in = amount_zed_in - total_fee;
         let target_out = (net_in * self.reserve_target) / (self.reserve_zed + net_in);
@@ -139,10 +141,10 @@ impl LiquidityPool {
 }
 
 fn main() {
-    println!("=== ℤ ZED Ecosystem GSwap Engine: LIVE HTTP Oracle, Hyperdimensional Layer & Stealth ===");
+    println!("=== ℤ ZED Ecosystem GSwap Engine: Pure Rust TLS Live Oracle & Hyperdimensional Stealth ===");
 
     let oracle = UniversalPriceOracle::new();
-    println!("\n[LIVE HTTP PRICE ORACLE] Querying Real-Time Market APIs...");
+    println!("\n[LIVE HTTP PRICE ORACLE] Querying Real-Time Market APIs via RustLS...");
     
     for pair in ["ZED/BTC", "ZED/ETH", "ZED/USDT"] {
         match oracle.fetch_live_price(pair) {
