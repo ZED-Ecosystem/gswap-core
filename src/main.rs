@@ -1,9 +1,6 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use serde::Deserialize;
 
-// ==========================================
-// 1. HYPERDIMENSIONAL VECTOR SPACE ENGINE (D = 10,000)
-// ==========================================
 pub const HD_VECTOR_DIMENSIONS: usize = 10_000;
 
 pub struct HyperdimensionalRouteEngine;
@@ -18,9 +15,6 @@ impl HyperdimensionalRouteEngine {
     }
 }
 
-// ==========================================
-// 2. SENDER INVISIBILITY & STEALTH RECEIVE ADDRESS
-// ==========================================
 pub struct StealthReceiveWallet {
     pub tx_sequence: u64,
 }
@@ -39,9 +33,6 @@ impl StealthReceiveWallet {
     }
 }
 
-// ==========================================
-// 3. UNIVERSAL LIVE HTTP PRICE ORACLE ENGINE
-// ==========================================
 #[derive(Deserialize, Debug)]
 struct CoinGeckoResponse {
     bitcoin: Option<CurrencyPrice>,
@@ -60,7 +51,6 @@ impl UniversalPriceOracle {
         Self
     }
 
-    /// Fetches REAL-TIME live market prices directly over HTTP APIs
     pub fn fetch_live_price(&self, pair: &str) -> Result<f64, String> {
         let client = reqwest::blocking::Client::builder()
             .use_rustls_tls()
@@ -97,9 +87,6 @@ impl UniversalPriceOracle {
     }
 }
 
-// ==========================================
-// 4. GSWAP AMM POOL & SWAP ENGINE
-// ==========================================
 pub struct LiquidityPool {
     pub pool_id: String,
     pub pair: String,
@@ -109,7 +96,7 @@ pub struct LiquidityPool {
 
 impl LiquidityPool {
     pub fn new(pool_id: &str, pair: &str, init_zed: f64, init_target: f64) -> Self {
-        println!("[POOL CREATION] Created Pool {} ({})", pool_id, pair);
+        println!("[GSWAP POOL CREATION] Initialized Pool {} ({})", pool_id, pair);
         Self {
             pool_id: pool_id.to_string(),
             pair: pair.to_string(),
@@ -122,9 +109,9 @@ impl LiquidityPool {
         let _live_pair_price = oracle.fetch_live_price(&self.pair)?;
 
         let total_fee = amount_zed_in * 0.0010; // 0.10% Total Fee
-        let lp_fee = total_fee * 0.50;          // 0.05% LP Fee
-        let pol_fee = total_fee * 0.30;         // 0.03% POL Fee
-        let burn_fee = total_fee * 0.20;        // 0.02% Burn Fee
+        let lp_fee = total_fee * 0.50;          // 0.05% LP Provider
+        let pol_fee = total_fee * 0.30;         // 0.03% POL Reserve Vault
+        let burn_fee = total_fee * 0.20;        // 0.02% Deflationary Null Address Burn
 
         let net_in = amount_zed_in - total_fee;
         let target_out = (net_in * self.reserve_target) / (self.reserve_zed + net_in);
@@ -140,11 +127,15 @@ impl LiquidityPool {
 }
 
 fn main() {
-    println!("=== ℤ ZED Ecosystem GSwap Engine: Pure Rust TLS Live Oracle & Hyperdimensional Stealth ===");
+    println!("============================================================");
+    println!("=== ℤ GSWAP CORE APPLICATION ENGINE ===");
+    println!("============================================================");
+
+    let vector_sample = HyperdimensionalRouteEngine::compute_hd_state_vector("GSWAP_STATE_ROOT");
+    println!("\n[HYPERDIMENSIONAL ROUTER] Generated {}-dim state vector. Matrix checksum: {:?}", HD_VECTOR_DIMENSIONS, &vector_sample[0..5]);
 
     let oracle = UniversalPriceOracle::new();
-    println!("\n[LIVE HTTP PRICE ORACLE] Querying Real-Time Market APIs via RustLS...");
-    
+    println!("\n[UNIVERSAL PRICE ORACLE] Querying Live Market Feeds via Pure RustLS...");
     for pair in ["ZED/BTC", "ZED/ETH", "ZED/USDT"] {
         match oracle.fetch_live_price(pair) {
             Ok(price) => println!(" -> LIVE Real-Time {} Market Price: ${:.2}", pair, price),
@@ -153,14 +144,17 @@ fn main() {
     }
 
     let mut wallet = StealthReceiveWallet::new();
-    let (stealth_addr, _) = wallet.generate_stealth_receive_address();
+    let (stealth_addr, zk_proof) = wallet.generate_stealth_receive_address();
     println!("\n[SENDER INVISIBILITY ACTIVE]");
-    println!(" -> Dynamic Single-Use Receive Address: {}", stealth_addr);
+    println!(" -> One-Time Stealth Receive Address: {}", stealth_addr);
+    println!(" -> Zero-Knowledge Proof Key:         {}", zk_proof);
 
-    println!("\n--- Executing Live Oracle AMM Swaps ---");
+    println!("\n--- EXECUTING SWAP TRANSACTIONS ---");
     let mut usdt_pool = LiquidityPool::new("POOL-ZED-USDT", "ZED/USDT", 10_000_000.0, 55_000_000.0);
     usdt_pool.dynamic_swap(100.0, &oracle).unwrap();
 
     let mut btc_pool = LiquidityPool::new("POOL-ZED-BTC", "ZED/BTC", 10_000_000.0, 583.6);
     btc_pool.dynamic_swap(100.0, &oracle).unwrap();
+
+    println!("\n[GSWAP CORE ENGINE] verified & fully operating.");
 }

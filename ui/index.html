@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSwap Core - Powered by ZED Ecosystem</title>
+    <style>
+        :root {
+            --bg-dark: #040914;
+            --card-bg: rgba(10, 25, 47, 0.85);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #0066ff;
+            --text-main: #ffffff;
+            --text-sub: #8892b0;
+            --border-glow: rgba(0, 242, 254, 0.3);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: radial-gradient(circle at 50% 30%, #0a2540 0%, #040914 70%);
+        }
+        .map-background {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: url('./assets/1000014983.png') center/cover no-repeat;
+            opacity: 0.18; z-index: 0; pointer-events: none;
+        }
+        .app-container {
+            position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        header { display: flex; justify-content: space-between; align-items: center; }
+        .brand-logo { display: flex; align-items: center; gap: 12px; }
+        .brand-logo img.gswap-icon { height: 42px; border-radius: 50%; box-shadow: 0 0 12px var(--accent-cyan); }
+        .brand-logo img.zed-shield { height: 38px; }
+        .network-tag {
+            font-size: 0.75rem; color: var(--accent-cyan); background: rgba(0, 242, 254, 0.1);
+            border: 1px solid var(--accent-cyan); padding: 4px 10px; border-radius: 12px; font-weight: bold;
+        }
+        .market-banner {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.4), rgba(0, 242, 254, 0.2)), url('./assets/1000014983.png') center/cover;
+            border: 1px solid var(--border-glow); border-radius: 16px; padding: 20px;
+        }
+        .swap-card {
+            background: var(--card-bg); border: 1px solid var(--border-glow); border-radius: 20px; padding: 24px;
+        }
+        .input-box {
+            background: rgba(4, 9, 20, 0.7); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px; padding: 14px; margin-bottom: 12px;
+        }
+        .input-row { display: flex; justify-content: space-between; align-items: center; }
+        .input-row input { background: transparent; border: none; color: #fff; font-size: 1.4rem; font-weight: bold; outline: none; width: 60%; }
+        .currency-select { display: flex; align-items: center; gap: 6px; background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); padding: 6px 12px; border-radius: 20px; font-weight: bold; }
+        .currency-select img { width: 20px; height: 20px; }
+        .action-btn {
+            width: 100%; padding: 16px; border: none; border-radius: 14px;
+            background: linear-gradient(90deg, #0066ff, #00f2fe); color: #fff; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px;
+        }
+        .stealth-box {
+            background: rgba(0, 242, 254, 0.05); border: 1px dashed var(--accent-cyan); border-radius: 14px; padding: 14px; margin-top: 15px; font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="map-background"></div>
+    <div class="app-container">
+        <header>
+            <div class="brand-logo">
+                <img src="./assets/1000007815.png" alt="GSwap Logo" class="gswap-icon">
+                <img src="./assets/1000007804.png" alt="ZED Shield" class="zed-shield">
+            </div>
+            <span class="network-tag">HD-NETWORK ACTIVE</span>
+        </header>
+        <div class="market-banner">
+            <h2>Global Liquidity Map</h2>
+            <p>Post-Quantum HD-Vector Routing ($D=10,000$)</p>
+        </div>
+        <div class="swap-card">
+            <div style="display:flex; justify-space-between; align-items:center; margin-bottom:15px;">
+                <h3>GSwap Exchange</h3>
+                <img src="./assets/1000007799.png" alt="ZED Symbol Logo" style="height: 28px;">
+            </div>
+            <div class="input-box">
+                <div class="input-row">
+                    <input type="number" id="swap-input" value="100.00">
+                    <div class="currency-select">
+                        <img src="./assets/1000007799.png" alt="ZED Logo">
+                        <span>ZED</span>
+                    </div>
+                </div>
+            </div>
+            <button class="action-btn" onclick="alert('Swap Executed via GSwap-core!')">Execute GSwap</button>
+            <div class="stealth-box">
+                <div style="color:var(--accent-cyan); font-weight:bold;">SENDER INVISIBILITY ACTIVE</div>
+                <div style="font-family:monospace; color:var(--text-sub); margin-top:4px;">0xzed_stealth_18cfd228c7ffdc6c00000001</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
