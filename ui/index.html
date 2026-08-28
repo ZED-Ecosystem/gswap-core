@@ -43,7 +43,6 @@
             border: 1px solid var(--border-dark);
         }
 
-        /* Header */
         .status-bar {
             padding: 12px 20px 4px;
             display: flex;
@@ -78,7 +77,6 @@
             cursor: pointer;
         }
 
-        /* Tabs */
         .dex-tabs {
             display: flex;
             background: var(--card-dark);
@@ -112,7 +110,6 @@
             padding: 16px 20px 90px;
         }
 
-        /* DEX Modules */
         .dex-card {
             background: var(--card-dark);
             border-radius: 18px;
@@ -153,6 +150,23 @@
             align-items: center;
         }
 
+        .token-display-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-dark);
+            border: 1px solid var(--border-dark);
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .token-icon-img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
         .swap-input {
             background: none;
             border: none;
@@ -164,17 +178,13 @@
         }
 
         .token-select {
-            background: var(--card-dark);
-            border: 1px solid var(--border-dark);
+            background: transparent;
+            border: none;
             color: var(--text-white);
-            padding: 6px 12px;
-            border-radius: 20px;
             font-weight: 700;
             font-size: 0.85rem;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            outline: none;
         }
 
         .swap-divider {
@@ -230,7 +240,6 @@
 
         .action-btn.green { background: var(--btn-green); }
 
-        /* Stealth Section */
         .stealth-box {
             background: rgba(0, 195, 255, 0.05);
             border: 1px dashed var(--accent-cyan);
@@ -243,7 +252,6 @@
         .stealth-title { color: var(--accent-cyan); font-weight: 700; margin-bottom: 4px; }
         .stealth-address { font-family: monospace; font-size: 0.7rem; color: var(--text-sub); word-break: break-all; }
 
-        /* Navigation */
         .bottom-nav {
             position: absolute;
             bottom: 0;
@@ -282,12 +290,12 @@
         <span>Hyperdimensional Routing</span>
     </div>
 
+    <!-- App Header Branding -->
     <div class="app-header">
-        <img src="./assets/GSwap Logo.png" alt="GSwap Logo" class="gswap-app-logo" onerror="this.src='./assets/image_f174f3d1.png'">
+        <img src="./assets/GSwap Logo.png" alt="GSwap Logo" class="gswap-app-logo">
         <button class="wallet-pill" id="wallet-btn" onclick="toggleWallet()">Connect Wallet</button>
     </div>
 
-    <!-- Dex Mode Selection -->
     <div class="dex-tabs">
         <button class="tab-btn active" onclick="switchTab('swap')">Swap</button>
         <button class="tab-btn" onclick="switchTab('pool')">Pool / AMM</button>
@@ -296,7 +304,6 @@
 
     <div class="scrollable-content">
 
-        <!-- 1. SWAP MODULE -->
         <div id="swap-module" class="dex-card">
             <div class="card-header">
                 <span class="card-title">Instant Swap</span>
@@ -311,11 +318,14 @@
                 </div>
                 <div class="swap-input-row">
                     <input type="number" class="swap-input" id="pay-amount" value="1.0" oninput="calculateOutput()">
-                    <select class="token-select" id="pay-token" onchange="calculateOutput()">
-                        <option value="ZED">ZED</option>
-                        <option value="ETH">ETH</option>
-                        <option value="BTC">BTC</option>
-                    </select>
+                    <div class="token-display-box">
+                        <img id="pay-icon" class="token-icon-img" src="./assets/ZED Logo.png">
+                        <select class="token-select" id="pay-token" onchange="updateTokenIcons(); calculateOutput();">
+                            <option value="ZED">ZED</option>
+                            <option value="ETH">ETH</option>
+                            <option value="BTC">BTC</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -331,15 +341,17 @@
                 </div>
                 <div class="swap-input-row">
                     <input type="number" class="swap-input" id="receive-amount" value="0.00" readonly>
-                    <select class="token-select" id="receive-token" onchange="calculateOutput()">
-                        <option value="ETH">ETH</option>
-                        <option value="ZED">ZED</option>
-                        <option value="BTC">BTC</option>
-                    </select>
+                    <div class="token-display-box">
+                        <img id="receive-icon" class="token-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
+                        <select class="token-select" id="receive-token" onchange="updateTokenIcons(); calculateOutput();">
+                            <option value="ETH">ETH</option>
+                            <option value="ZED">ZED</option>
+                            <option value="BTC">BTC</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
-            <!-- Real-time Engine Routing Details -->
             <div class="route-info">
                 <div class="route-row">
                     <span>Routing Engine</span>
@@ -358,7 +370,6 @@
             <button class="action-btn" onclick="executeSwap()">Execute Swap</button>
         </div>
 
-        <!-- 2. POOL / AMM MODULE -->
         <div id="pool-module" class="dex-card hidden">
             <div class="card-header">
                 <span class="card-title">Liquidity Pools</span>
@@ -369,7 +380,10 @@
                 <div class="swap-box-header"><span>Deposit Token A</span></div>
                 <div class="swap-input-row">
                     <input type="number" class="swap-input" value="100.0">
-                    <select class="token-select"><option>ZED</option></select>
+                    <div class="token-display-box">
+                        <img class="token-icon-img" src="./assets/ZED Logo.png">
+                        <span style="font-weight:700; font-size:0.85rem;">ZED</span>
+                    </div>
                 </div>
             </div>
 
@@ -377,7 +391,10 @@
                 <div class="swap-box-header"><span>Deposit Token B</span></div>
                 <div class="swap-input-row">
                     <input type="number" class="swap-input" value="0.17">
-                    <select class="token-select"><option>ETH</option></select>
+                    <div class="token-display-box">
+                        <img class="token-icon-img" src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png">
+                        <span style="font-weight:700; font-size:0.85rem;">ETH</span>
+                    </div>
                 </div>
             </div>
 
@@ -395,7 +412,6 @@
             <button class="action-btn green" onclick="alert('Liquidity successfully provided to gswap-core AMM engine!')">Supply Liquidity</button>
         </div>
 
-        <!-- 3. PRIVACY / STEALTH RECEIVE MODULE -->
         <div id="privacy-module" class="dex-card hidden">
             <div class="card-header">
                 <span class="card-title">Stealth Receive Address</span>
@@ -420,10 +436,24 @@
 </div>
 
 <script>
-    // Universal Price Engine Mapping (Relative to USD)
+    // Token Icon Map
+    const tokenIcons = {
+        ZED: './assets/ZED Logo.png',
+        ETH: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/eth.png',
+        BTC: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/128/color/btc.png'
+    };
+
     const rates = { ZED: 5.50, ETH: 3120.02, BTC: 94380.00 };
     let slippage = 0.5;
     let walletConnected = false;
+
+    function updateTokenIcons() {
+        const payTkn = document.getElementById('pay-token').value;
+        const recTkn = document.getElementById('receive-token').value;
+
+        document.getElementById('pay-icon').src = tokenIcons[payTkn] || './assets/ZED Logo.png';
+        document.getElementById('receive-icon').src = tokenIcons[recTkn] || './assets/ZED Logo.png';
+    }
 
     function toggleWallet() {
         walletConnected = !walletConnected;
@@ -484,6 +514,7 @@
         const temp = paySelect.value;
         paySelect.value = receiveSelect.value;
         receiveSelect.value = temp;
+        updateTokenIcons();
         calculateOutput();
     }
 
@@ -514,7 +545,10 @@
         document.getElementById('stealth-result').classList.remove('hidden');
     }
 
-    document.addEventListener('DOMContentLoaded', calculateOutput);
+    document.addEventListener('DOMContentLoaded', () => {
+        updateTokenIcons();
+        calculateOutput();
+    });
 </script>
 
 </body>
